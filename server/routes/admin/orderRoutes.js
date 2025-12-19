@@ -3,7 +3,7 @@ const {
   getAllOrdersAllUser,
   getOrderDetailsForAdmin,
   updateOrderStatus,
-} = require("../../controllers/adminOrderCOntroller");
+} = require("../../controllers/adminOrderController");
 const router = express.Router();
 router.get("/get-all", getAllOrdersAllUser);
 router.get("/details/:id", getOrderDetailsForAdmin);
