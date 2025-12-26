@@ -3,6 +3,11 @@ const Product = require("../models/Product");
 
 const handleImageUpload = async (req, res) => {
   try {
+    if (req.user && req.user.isDemo) {
+      return res
+        .status(403)
+        .json({ success: false, message: "Demo admin: no write access" });
+    }
     if (!req.file) {
       return res.json({
         success: false,
@@ -30,6 +35,11 @@ const handleImageUpload = async (req, res) => {
 
 const addProduct = async (req, res) => {
   try {
+    if (req.user && req.user.isDemo) {
+      return res
+        .status(403)
+        .json({ success: false, message: "Demo admin: no write access" });
+    }
     const {
       image,
       title,
@@ -82,6 +92,11 @@ const fetchAllProducts = async (req, res) => {
 
 const editProduct = async (req, res) => {
   try {
+    if (req.user && req.user.isDemo) {
+      return res
+        .status(403)
+        .json({ success: false, message: "Demo admin: no write access" });
+    }
     const { id } = req.params;
     const {
       image,
@@ -123,6 +138,11 @@ const editProduct = async (req, res) => {
 
 const deleteProduct = async (req, res) => {
   try {
+    if (req.user && req.user.isDemo) {
+      return res
+        .status(403)
+        .json({ success: false, message: "Demo admin: no write access" });
+    }
     const { id } = req.params;
     const product = await Product.findByIdAndDelete(id);
     if (!product)

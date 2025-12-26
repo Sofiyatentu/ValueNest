@@ -10,18 +10,26 @@ const initialState = {
 export const addNewProduct = createAsyncThunk(
   "/products/add",
   async (formData) => {
+    const token = JSON.parse(sessionStorage.getItem("token"));
     const result = await axios.post(
       `${import.meta.env.VITE_API_URL}/api/admin/products/add`,
       formData,
-      { headers: { "Content-Type": "application/json" } }
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
     );
     return result.data;
   }
 );
 
 export const fetchAllProducts = createAsyncThunk("/products/all", async () => {
+  const token = JSON.parse(sessionStorage.getItem("token"));
   const result = await axios.get(
-    `${import.meta.env.VITE_API_URL}/api/admin/products/get`
+    `${import.meta.env.VITE_API_URL}/api/admin/products/get`,
+    { headers: { Authorization: `Bearer ${token}` } }
   );
   return result.data;
 });
@@ -29,10 +37,16 @@ export const fetchAllProducts = createAsyncThunk("/products/all", async () => {
 export const editProduct = createAsyncThunk(
   "/products/edit",
   async ({ id, formData }) => {
+    const token = JSON.parse(sessionStorage.getItem("token"));
     const result = await axios.put(
-      `http://localhost:5000/api/admin/products/edit/${id}`,
+      `${import.meta.env.VITE_API_URL}/api/admin/products/edit/${id}`,
       formData,
-      { headers: { "Content-Type": "application/json" } }
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
     );
     return result.data;
   }
@@ -41,8 +55,10 @@ export const editProduct = createAsyncThunk(
 export const deleteProduct = createAsyncThunk(
   "/products/delete",
   async (id) => {
+    const token = JSON.parse(sessionStorage.getItem("token"));
     const result = await axios.delete(
-      `http://localhost:5000/api/admin/products/delete/${id}`
+      `${import.meta.env.VITE_API_URL}/api/admin/products/delete/${id}`,
+      { headers: { Authorization: `Bearer ${token}` } }
     );
     return result.data;
   }

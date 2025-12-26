@@ -32,6 +32,7 @@ const initialFormData = {
 };
 
 function AdminProducts() {
+  const isDemo = useSelector((state) => state.auth.user?.isDemo);
   const [openCreateProductsDialog, setOpenCreateProductsDialog] =
     useState(false);
   const [formData, setFormData] = useState(initialFormData);
@@ -44,6 +45,15 @@ function AdminProducts() {
 
   function onSubmit(e) {
     e.preventDefault();
+    if (isDemo) {
+      setOpenCreateProductsDialog(false);
+      setFormData(initialFormData);
+      setimageFile(null);
+      toast("Demo admin: use real admin credentials to perform this action", {
+        duration: 4000,
+      });
+      return;
+    }
     currenteditedId !== null
       ? dispatch(editProduct({ id: currenteditedId, formData })).then(
           (data) => {

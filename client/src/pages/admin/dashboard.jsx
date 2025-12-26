@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import ImageUpload from "@/components/admin/ImageUpload";
 import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,8 +11,15 @@ function AdminDashboard() {
   const [imageLoading, setImageLoading] = useState(false);
   const dispatch = useDispatch();
   const { featureImagesList } = useSelector((state) => state.feature);
+  const isDemo = useSelector((state) => state.auth.user?.isDemo);
 
   function handleFeatureImageUpload() {
+    if (isDemo) {
+      toast("Demo admin: use real admin credentials to add feature images", {
+        duration: 4000,
+      });
+      return;
+    }
     dispatch(addFeatureImage(uploadedImageUrl)).then((data) => {
       if (data?.payload?.success) {
         dispatch(getFeatureImages());

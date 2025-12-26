@@ -9,8 +9,10 @@ const initialState = {
 export const getAllOrdersAllUser = createAsyncThunk(
   "/getAllAdmin",
   async () => {
+    const token = JSON.parse(sessionStorage.getItem("token"));
     const response = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/admin/orders/get-all`
+      `${import.meta.env.VITE_API_URL}/api/admin/orders/get-all`,
+      { headers: { Authorization: `Bearer ${token}` } }
     );
     return response.data;
   }
@@ -19,8 +21,10 @@ export const getAllOrdersAllUser = createAsyncThunk(
 export const getOrderDetailsForAdmin = createAsyncThunk(
   "/admin/details/:id",
   async (id) => {
+    const token = JSON.parse(sessionStorage.getItem("token"));
     const response = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/admin/orders/details/${id}`
+      `${import.meta.env.VITE_API_URL}/api/admin/orders/details/${id}`,
+      { headers: { Authorization: `Bearer ${token}` } }
     );
     return response.data;
   }
@@ -29,9 +33,11 @@ export const getOrderDetailsForAdmin = createAsyncThunk(
 export const updateOrderStatus = createAsyncThunk(
   "/update/:id",
   async ({ id, orderStatus }) => {
+    const token = JSON.parse(sessionStorage.getItem("token"));
     const response = await axios.put(
       `${import.meta.env.VITE_API_URL}/api/admin/orders/update/${id}`,
-      { orderStatus }
+      { orderStatus },
+      { headers: { Authorization: `Bearer ${token}` } }
     );
     return response.data;
   }

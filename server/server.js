@@ -16,9 +16,15 @@ const reviewRoutes = require("./routes/shop/reviewRoutes");
 const featureRoutes = require("./routes/common/featureRoutes");
 
 mongoose
-  .connect(process.env.MONGO_URL)
+  .connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 10000,
+  })
   .then(() => console.log("mongodb connected"))
-  .catch((error) => console.log(error));
+  .catch((error) => {
+    console.error("Mongo connection error:", error);
+  });
 
 const app = express();
 const PORT = process.env.PORT || 5000;

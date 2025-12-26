@@ -47,6 +47,11 @@ const getOrderDetailsForAdmin = async (req, res) => {
 
 const updateOrderStatus = async (req, res) => {
   try {
+    if (req.user && req.user.isDemo) {
+      return res
+        .status(403)
+        .json({ success: false, message: "Demo admin: no write access" });
+    }
     const { id } = req.params;
     const { orderStatus } = req.body;
     const order = await Order.findById(id);

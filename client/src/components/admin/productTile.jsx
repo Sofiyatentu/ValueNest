@@ -1,5 +1,7 @@
 import { Button } from "../ui/button";
 import { Card, CardContent, CardFooter } from "../ui/card";
+import { useSelector } from "react-redux";
+import { toast } from "sonner";
 
 function ProductTile({
   product,
@@ -8,6 +10,8 @@ function ProductTile({
   setCurrentEditedId,
   handleDelete,
 }) {
+  const isDemo = useSelector((state) => state.auth.user?.isDemo);
+
   return (
     <Card className="w-full max-w-sm mx-auto">
       <div>
@@ -43,7 +47,22 @@ function ProductTile({
           >
             Edit
           </Button>
-          <Button onClick={() => handleDelete(product?._id)}>Delete</Button>
+          <Button
+            onClick={() => {
+              if (isDemo) {
+                toast(
+                  "Demo admin: use real admin credentials to perform delete",
+                  {
+                    duration: 4000,
+                  }
+                );
+                return;
+              }
+              handleDelete(product?._id);
+            }}
+          >
+            Delete
+          </Button>
         </CardFooter>
       </div>
     </Card>

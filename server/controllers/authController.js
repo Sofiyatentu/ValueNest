@@ -2,6 +2,8 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
+const JWT_SECRET = process.env.SECRET_KEY || "SECRET_KEY";
+
 const registerUser = async (req, res) => {
   const { userName, email, password } = req.body;
   try {
@@ -28,6 +30,51 @@ const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
+    const demoEnvSet =
+      process.env.DEMO_ADMIN_EMAIL && process.env.DEMO_ADMIN_PASSWORD;
+    if (
+      demoEnvSet &&
+      email === process.env.DEMO_ADMIN_EMAIL &&
+      password === process.env.DEMO_ADMIN_PASSWORD
+    ) {
+      let demoUser = await User.findOne({ email });
+      if (!demoUser) {
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        demoUser = new User({
+          userName: "Demo Admin",
+          email,
+          password: hashedPassword,
+          role: "admin",
+          isDemo: true,
+        });
+        await demoUser.save();
+      }
+      const token = jwt.sign(
+        {
+          id: demoUser._id,
+          role: demoUser.role,
+          email: demoUser.email,
+          userName: demoUser.userName,
+          isDemo: true,
+        },
+        JWT_SECRET,
+        { expiresIn: "60m" }
+      );
+      return res.status(200).json({
+        success: true,
+        message: "Logged in (demo) successfully",
+        token,
+        user: {
+          email: demoUser.email,
+          id: demoUser._id,
+          role: demoUser.role,
+          userName: demoUser.userName,
+          isDemo: true,
+        },
+      });
+    }
+
     const existingUser = await User.findOne({ email });
     if (!existingUser)
       return res.json({ success: false, message: "User doesnot exist" });
@@ -40,8 +87,9 @@ const loginUser = async (req, res) => {
         role: existingUser.role,
         email: existingUser.email,
         userName: existingUser.userName,
+        isDemo: existingUser.isDemo || false,
       },
-      "SECRET_KEY",
+      JWT_SECRET,
       { expiresIn: "60m" }
     );
     // res.cookie("token", token, { httpOnly: true, secure: true }).json({
@@ -112,7 +160,12 @@ const authMiddleware = async (req, res, next) => {
     });
 
   try {
-    const decoded = jwt.verify(token, "SECRET_KEY");
+    const decoded = jwt.verify(token, JWT_SECRET);
+
+    if (decoded.role === "demo-admin") {
+      decoded.role = "admin";
+      decoded.isDemo = true;
+    }
     req.user = decoded;
     next();
   } catch (e) {

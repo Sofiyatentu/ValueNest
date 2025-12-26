@@ -17,12 +17,20 @@ const intialFormData = {
 
 function AdminOrderDetails({ orderDetails }) {
   const { user } = useSelector((state) => state.auth);
+  const isDemo = useSelector((state) => state.auth.user?.isDemo);
   const [formData, setFormData] = useState(intialFormData);
   const dispatch = useDispatch();
   function handleUpdateStatus(e) {
     e.preventDefault();
     console.log(formData, "formData");
     const { status } = formData;
+    if (isDemo) {
+      toast("Demo admin: use real admin credentials to update order status", {
+        duration: 4000,
+      });
+      setFormData(intialFormData);
+      return;
+    }
     dispatch(
       updateOrderStatus({ id: orderDetails?._id, orderStatus: status })
     ).then((data) => {

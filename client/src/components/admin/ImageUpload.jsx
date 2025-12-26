@@ -4,6 +4,8 @@ import { FileIcon, UploadCloudIcon, XIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { useEffect, useRef } from "react";
 import axios from "axios";
+import { useSelector } from "react-redux";
+import { toast } from "sonner";
 function ImageUpload({
   file,
   setFile,
@@ -15,8 +17,15 @@ function ImageUpload({
   isCustomStyling = false,
 }) {
   const inputRef = useRef(null);
+  const isDemo = useSelector((state) => state.auth.user?.isDemo);
   function handleImageFileChange(e) {
     const selectedFile = e.target.files?.[0];
+    if (isDemo) {
+      toast("Demo admin: use real admin credentials to upload images", {
+        duration: 4000,
+      });
+      return;
+    }
     if (selectedFile) setFile(selectedFile);
   }
   function handleDragOver(e) {
@@ -25,6 +34,12 @@ function ImageUpload({
   function handleDrop(e) {
     e.preventDefault();
     const droppedFile = e.dataTransfer.files?.[0];
+    if (isDemo) {
+      toast("Demo admin: use real admin credentials to upload images", {
+        duration: 4000,
+      });
+      return;
+    }
     if (droppedFile) setFile(droppedFile);
   }
   function handleRemoveImage() {
@@ -32,17 +47,26 @@ function ImageUpload({
     if (inputRef.current) inputRef.current.value = "";
   }
   async function uploadImagetoCloud() {
+    if (isDemo) {
+      setImageLoading(false);
+      toast("Demo admin: use real admin credentials to upload images", {
+        duration: 4000,
+      });
+      return;
+    }
     setImageLoading(true);
 
     const data = new FormData();
     data.append("my_file", file);
 
+    const token = JSON.parse(sessionStorage.getItem("token"));
     const response = await axios.post(
-      "http://localhost:5000/api/admin/products/upload-image",
+      `${import.meta.env.VITE_API_URL}/api/admin/products/upload-image`,
       data,
       {
         headers: {
           "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
         },
       }
     );
