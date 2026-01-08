@@ -24,7 +24,7 @@ import SearchPage from './pages/shopping/search';
 
 function App() {
   const { user, isAuthenticated, isLoading } = useSelector((state) => state.auth);
-  const a = 5;
+
   const dispatch = useDispatch();
   useEffect(() => {
     const token = JSON.parse(sessionStorage.getItem('token'));
