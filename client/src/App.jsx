@@ -1,34 +1,33 @@
-import { Routes, Route } from "react-router-dom";
-import "./App.css";
-import AuthLayout from "./components/auth/layout";
-import Login from "./pages/auth/login";
-import Register from "./pages/auth/register";
-import AdminLayout from "./components/admin/layout";
-import AdminDashboard from "./pages/admin/dashboard";
-import AdminOrders from "./pages/admin/orders";
-import AdminProducts from "./pages/admin/products";
-import ShoppingLayout from "./components/shopping/shoppingLayout";
-import NotFound from "./pages/NotFound";
-import Homepage from "./pages/shopping/Home";
-import Account from "./pages/shopping/account";
-import Checkout from "./pages/shopping/checkout";
-import Listing from "./pages/shopping/listing";
-import CheckAuth from "./components/CheckAuth";
-import UnAuthPage from "./pages/UnAuth";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import { checkAuth } from "./store/authSlice";
-import PayPalReturn from "./pages/shopping/paypalReturn";
-import PaymentSuccess from "./pages/shopping/paymentSuccess";
-import SearchPage from "./pages/shopping/search";
+import { Routes, Route } from 'react-router-dom';
+import './App.css';
+import AuthLayout from './components/auth/layout';
+import Login from './pages/auth/login';
+import Register from './pages/auth/register';
+import AdminLayout from './components/admin/layout';
+import AdminDashboard from './pages/admin/dashboard';
+import AdminOrders from './pages/admin/orders';
+import AdminProducts from './pages/admin/products';
+import ShoppingLayout from './components/shopping/shoppingLayout';
+import NotFound from './pages/NotFound';
+import Homepage from './pages/shopping/Home';
+import Account from './pages/shopping/account';
+import Checkout from './pages/shopping/checkout';
+import Listing from './pages/shopping/listing';
+import CheckAuth from './components/CheckAuth';
+import UnAuthPage from './pages/UnAuth';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { checkAuth } from './store/authSlice';
+import PayPalReturn from './pages/shopping/paypalReturn';
+import PaymentSuccess from './pages/shopping/paymentSuccess';
+import SearchPage from './pages/shopping/search';
 
 function App() {
-  const { user, isAuthenticated, isLoading } = useSelector(
-    (state) => state.auth
-  );
+  const { user, isAuthenticated, isLoading } = useSelector((state) => state.auth);
+
   const dispatch = useDispatch();
   useEffect(() => {
-    const token = JSON.parse(sessionStorage.getItem("token"));
+    const token = JSON.parse(sessionStorage.getItem('token'));
     dispatch(checkAuth(token));
   }, [dispatch]);
   if (isLoading) return <div>Loading...</div>;
@@ -38,11 +37,7 @@ function App() {
         <Route
           path="/"
           element={
-            <CheckAuth
-              isAuthenticated={isAuthenticated}
-              user={user}
-              isLoading={isLoading}
-            >
+            <CheckAuth isAuthenticated={isAuthenticated} user={user} isLoading={isLoading}>
               <AuthLayout />
             </CheckAuth>
           }
@@ -50,11 +45,7 @@ function App() {
         <Route
           path="/auth"
           element={
-            <CheckAuth
-              isAuthenticated={isAuthenticated}
-              user={user}
-              isLoading={isLoading}
-            >
+            <CheckAuth isAuthenticated={isAuthenticated} user={user} isLoading={isLoading}>
               <AuthLayout />
             </CheckAuth>
           }
@@ -65,11 +56,7 @@ function App() {
         <Route
           path="/admin"
           element={
-            <CheckAuth
-              isAuthenticated={isAuthenticated}
-              user={user}
-              isLoading={isLoading}
-            >
+            <CheckAuth isAuthenticated={isAuthenticated} user={user} isLoading={isLoading}>
               <AdminLayout />
             </CheckAuth>
           }
@@ -81,11 +68,7 @@ function App() {
         <Route
           path="/shop"
           element={
-            <CheckAuth
-              isAuthenticated={isAuthenticated}
-              user={user}
-              isLoading={isLoading}
-            >
+            <CheckAuth isAuthenticated={isAuthenticated} user={user} isLoading={isLoading}>
               <ShoppingLayout />
             </CheckAuth>
           }
