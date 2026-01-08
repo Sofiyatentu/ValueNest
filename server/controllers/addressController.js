@@ -1,4 +1,4 @@
-const Address = require("../models/Address");
+const Address = require('../models/Address');
 
 const addAddress = async (req, res) => {
   try {
@@ -6,7 +6,7 @@ const addAddress = async (req, res) => {
     if (!userId || !address || !city || !pincode || !phone || !notes)
       return res.status(400).json({
         success: false,
-        message: "Invalid data provided",
+        message: 'Invalid data provided',
       });
 
     const newAddress = new Address({
@@ -26,7 +26,7 @@ const addAddress = async (req, res) => {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: "Error",
+      message: 'Error',
     });
   }
 };
@@ -37,7 +37,7 @@ const fetchAddress = async (req, res) => {
     if (!userId)
       return res.status(400).json({
         success: false,
-        message: "UserId is required",
+        message: 'UserId is required',
       });
 
     const addressList = await Address.find({ userId });
@@ -49,7 +49,7 @@ const fetchAddress = async (req, res) => {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: "Error",
+      message: 'Error',
     });
   }
 };
@@ -61,19 +61,17 @@ const editAddress = async (req, res) => {
     if (!userId || !addressId)
       return res.status(400).json({
         success: false,
-        message: "UserId and addressId is required",
+        message: 'UserId and addressId is required',
       });
 
-    const address = await Address.findOneAndUpdate(
-      { _id: addressId, userId },
-      formData,
-      { new: true }
-    );
+    const address = await Address.findOneAndUpdate({ _id: addressId, userId }, formData, {
+      new: true,
+    });
 
     if (!address)
       return res.status(400).json({
         success: false,
-        message: "Address not found",
+        message: 'Address not found',
       });
 
     res.status(200).json({
@@ -84,7 +82,7 @@ const editAddress = async (req, res) => {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: "Error",
+      message: 'Error',
     });
   }
 };
@@ -96,7 +94,7 @@ const deleteAddress = async (req, res) => {
     if (!userId || !addressId)
       return res.status(400).json({
         success: false,
-        message: "UserId and addressId is required",
+        message: 'UserId and addressId is required',
       });
 
     const address = await Address.findOneAndDelete({ _id: addressId, userId });
@@ -104,18 +102,18 @@ const deleteAddress = async (req, res) => {
     if (!address)
       return res.status(400).json({
         success: false,
-        message: "Address not found",
+        message: 'Address not found',
       });
 
     res.status(200).json({
       success: true,
-      message: "Address deleted successfully",
+      message: 'Address deleted successfully',
     });
   } catch (e) {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: "Error",
+      message: 'Error',
     });
   }
 };

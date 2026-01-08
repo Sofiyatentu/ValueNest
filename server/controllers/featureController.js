@@ -1,4 +1,4 @@
-const Feature = require("../models/Feature");
+const Feature = require('../models/Feature');
 
 const addFeatureImage = async (req, res) => {
   try {
@@ -15,7 +15,7 @@ const addFeatureImage = async (req, res) => {
     console.log(error);
     res.status(500).json({
       success: false,
-      message: "Error occured",
+      message: 'Error occured',
     });
   }
 };
@@ -31,7 +31,7 @@ const getFeatureImages = async (req, res) => {
     console.log(error);
     res.status(500).json({
       success: false,
-      message: "Error occured",
+      message: 'Error occured',
     });
   }
 };

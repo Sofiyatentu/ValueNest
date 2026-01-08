@@ -1,22 +1,17 @@
-const Product = require("../models/Product");
+const Product = require('../models/Product');
 
 const searchProducts = async (req, res) => {
   try {
     const { keyword } = req.params;
-    if (!keyword || typeof keyword !== "string") {
+    if (!keyword || typeof keyword !== 'string') {
       return res.status(400).json({
         success: false,
-        message: "Keyword is required and must be a string",
+        message: 'Keyword is required and must be a string',
       });
     }
-    const regex = new RegExp(keyword, "i");
+    const regex = new RegExp(keyword, 'i');
     const createSearchQuery = {
-      $or: [
-        { title: regex },
-        { category: regex },
-        { description: regex },
-        { brand: regex },
-      ],
+      $or: [{ title: regex }, { category: regex }, { description: regex }, { brand: regex }],
     };
     const searchResults = await Product.find(createSearchQuery);
     res.status(200).json({
@@ -27,7 +22,7 @@ const searchProducts = async (req, res) => {
     console.log(error);
     res.status(500).json({
       success: false,
-      message: "Some error occurred",
+      message: 'Some error occurred',
     });
   }
 };

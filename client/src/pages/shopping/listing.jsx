@@ -1,39 +1,32 @@
-import ProductDetails from "@/components/shopping/ProductDetails";
-import ProductFIlter from "@/components/shopping/ProductFilter";
-import ProductTile from "@/components/shopping/ProductTile";
-import { Button } from "@/components/ui/button";
+import ProductDetails from '@/components/shopping/ProductDetails';
+import ProductFIlter from '@/components/shopping/ProductFilter';
+import ProductTile from '@/components/shopping/ProductTile';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { sortOptions } from "@/config";
-import { addToCart, fetchCartItems } from "@/store/shop/cartSlice";
-import {
-  getAllFilteredProducts,
-  getProductDetails,
-} from "@/store/shop/productSlice";
-import { ArrowUpDown } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  createSearchParams,
-  useSearchParams,
-  useLocation,
-} from "react-router-dom";
-import { toast } from "sonner";
+} from '@/components/ui/dropdown-menu';
+import { sortOptions } from '@/config';
+import { addToCart, fetchCartItems } from '@/store/shop/cartSlice';
+import { getAllFilteredProducts, getProductDetails } from '@/store/shop/productSlice';
+import { ArrowUpDown } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useSearchParams, useLocation } from 'react-router-dom';
+import { toast } from 'sonner';
 
 function createSearchParamsHelper(filterParams) {
   const queryParams = [];
   for (const [key, value] of Object.entries(filterParams)) {
     if (Array.isArray(value) && value.length > 0) {
-      const paramValue = value.join(",");
+      const paramValue = value.join(',');
       queryParams.push(`${key}=${encodeURIComponent(paramValue)}`);
     }
   }
-  return queryParams.join("&");
+  return queryParams.join('&');
 }
 
 function Listing() {
@@ -49,13 +42,13 @@ function Listing() {
   const location = useLocation();
 
   useEffect(() => {
-    setSort("price-lowtohigh");
-    setFilters(JSON.parse(sessionStorage.getItem("filters")) || {});
+    setSort('price-lowtohigh');
+    setFilters(JSON.parse(sessionStorage.getItem('filters')) || {});
   }, [setFilters, setSort]);
 
   useEffect(() => {
     if (location?.state?.filtersUpdated) {
-      setFilters(JSON.parse(sessionStorage.getItem("filters")) || {});
+      setFilters(JSON.parse(sessionStorage.getItem('filters')) || {});
     }
   }, [location?.state?.filtersUpdated]);
 
@@ -63,14 +56,13 @@ function Listing() {
     if (filters && Object.keys(filters).length > 0) {
       const createQueryString = createSearchParamsHelper(filters);
       setSearchParams(new URLSearchParams(createQueryString));
+      console.log(searchParams);
     }
-  }, [filters]);
+  }, [filters, searchParams, setSearchParams]);
 
   useEffect(() => {
     if (filters !== null && sort !== null) {
-      dispatch(
-        getAllFilteredProducts({ filterParams: filters, sortParams: sort })
-      );
+      dispatch(getAllFilteredProducts({ filterParams: filters, sortParams: sort }));
     }
   }, [dispatch, sort, filters]);
 
@@ -91,15 +83,13 @@ function Listing() {
         [getSectionId]: [getCurrentOption],
       };
     } else {
-      const indexOfCurrentOption =
-        cpyFilters[getSectionId].indexOf(getCurrentOption);
-      if (indexOfCurrentOption === -1)
-        cpyFilters[getSectionId].push(getCurrentOption);
+      const indexOfCurrentOption = cpyFilters[getSectionId].indexOf(getCurrentOption);
+      if (indexOfCurrentOption === -1) cpyFilters[getSectionId].push(getCurrentOption);
       else cpyFilters[getSectionId].splice(indexOfCurrentOption, 1);
     }
     console.log(cpyFilters);
     setFilters(cpyFilters);
-    sessionStorage.setItem("filters", JSON.stringify(cpyFilters));
+    sessionStorage.setItem('filters', JSON.stringify(cpyFilters));
   }
 
   function handlegetProductDetails(getCurrentProductId) {
@@ -110,7 +100,7 @@ function Listing() {
     let getCartItems = cartItems.items || [];
     if (getCartItems.length) {
       const indexOfCurrentItem = getCartItems.findIndex(
-        (item) => item.productId === getCurrentProductId
+        (item) => item.productId === getCurrentProductId,
       );
       if (indexOfCurrentItem > -1) {
         const getQuantity = getCartItems[indexOfCurrentItem].quantity;
@@ -125,11 +115,11 @@ function Listing() {
         userId: user?.id,
         productId: getCurrentProductId,
         quantity: 1,
-      })
+      }),
     ).then((data) => {
       if (data?.payload?.success) {
         dispatch(fetchCartItems(user?.id));
-        toast("Product is added to cart");
+        toast('Product is added to cart');
       }
     });
   }
@@ -141,16 +131,10 @@ function Listing() {
         <div className="p-4 border-b flex items-center justify-between">
           <h2 className="text-lg font-extrabold">All products</h2>
           <div className="flex items-center gap-3">
-            <span className="text-muted-foreground">
-              {productList.length} products
-            </span>
+            <span className="text-muted-foreground">{productList.length} products</span>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center gap-1"
-                >
+                <Button variant="outline" size="sm" className="flex items-center gap-1">
                   <ArrowUpDown className="h-4 w-4" />
                   <span>Sort by</span>
                 </Button>
@@ -179,11 +163,7 @@ function Listing() {
             : null}
         </div>
       </div>
-      <ProductDetails
-        open={open}
-        setOpen={setOpen}
-        productDetails={productDetails}
-      />
+      <ProductDetails open={open} setOpen={setOpen} productDetails={productDetails} />
     </div>
   );
 }

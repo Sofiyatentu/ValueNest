@@ -1,5 +1,5 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import axios from 'axios';
 const initialState = {
   isAuthenticated: false,
   isLoading: true,
@@ -7,38 +7,27 @@ const initialState = {
   token: null,
 };
 
-export const registerUser = createAsyncThunk(
-  "/auth/register",
-  async (formData) => {
-    const response = await axios.post(
-      `${import.meta.env.VITE_API_URL}/api/auth/register`,
-      formData,
-      {
-        withCredentials: true,
-      }
-    );
-    return response.data;
-  }
-);
-
-export const loginUser = createAsyncThunk("/auth/login", async (formData) => {
-  const response = await axios.post(
-    `${import.meta.env.VITE_API_URL}/api/auth/login`,
-    formData,
-    {
-      withCredentials: true,
-    }
-  );
+export const registerUser = createAsyncThunk('/auth/register', async (formData) => {
+  const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/register`, formData, {
+    withCredentials: true,
+  });
   return response.data;
 });
 
-export const logoutUser = createAsyncThunk("/auth/logout", async () => {
+export const loginUser = createAsyncThunk('/auth/login', async (formData) => {
+  const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/login`, formData, {
+    withCredentials: true,
+  });
+  return response.data;
+});
+
+export const logoutUser = createAsyncThunk('/auth/logout', async () => {
   const response = await axios.post(
     `${import.meta.env.VITE_API_URL}/api/auth/logout`,
     {},
     {
       withCredentials: true,
-    }
+    },
   );
   return response.data;
 });
@@ -57,7 +46,7 @@ export const logoutUser = createAsyncThunk("/auth/logout", async () => {
 //   return response.data;
 // });
 
-export const checkAuth = createAsyncThunk("/auth/checkAuth", async (token) => {
+export const checkAuth = createAsyncThunk('/auth/checkAuth', async (token) => {
   const response = await axios.get(
     `${import.meta.env.VITE_API_URL}/api/auth/checkAuth`,
 
@@ -65,22 +54,19 @@ export const checkAuth = createAsyncThunk("/auth/checkAuth", async (token) => {
       withCredentials: true,
       headers: {
         Authorization: `Bearer ${token}`,
-        "Cache-Control": "no-store,no-cache,must-revalidate,proxy-revalidate",
+        'Cache-Control': 'no-store,no-cache,must-revalidate,proxy-revalidate',
       },
-    }
+    },
   );
   return response.data;
 });
 
 const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState,
   reducers: {
-    setUser: (state, action) => {},
     resetTokenAndCredentials: (state) => {
-      (state.isAuthenticated = false),
-        (state.token = null),
-        (state.user = null);
+      ((state.isAuthenticated = false), (state.token = null), (state.user = null));
     },
   },
   extraReducers: (builder) => {
@@ -106,7 +92,7 @@ const authSlice = createSlice({
         state.user = action.payload.success ? action.payload.user : null;
         state.isAuthenticated = action.payload.success;
         state.token = action.payload.token;
-        sessionStorage.setItem("token", JSON.stringify(action.payload.token));
+        sessionStorage.setItem('token', JSON.stringify(action.payload.token));
       })
       .addCase(loginUser.rejected, (state) => {
         state.isAuthenticated = false;

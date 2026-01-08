@@ -1,7 +1,4 @@
-import { Button } from "@/components/ui/button";
-import banner1 from "../../assets/banner1.webp";
-import banner2 from "../../assets/banner2.webp";
-import banner3 from "../../assets/banner3.webp";
+import { Button } from '@/components/ui/button';
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -11,21 +8,18 @@ import {
   ShirtIcon,
   ShoppingBasket,
   WashingMachine,
-} from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Laptop, Handbag, CookingPot, Brush, Dumbbell } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  getAllFilteredProducts,
-  getProductDetails,
-} from "@/store/shop/productSlice";
-import { getFeatureImages } from "@/store/featureSlice";
-import { addToCart, fetchCartItems } from "@/store/shop/cartSlice";
-import ProductTile from "@/components/shopping/ProductTile";
-import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
-import ProductDetails from "@/components/shopping/ProductDetails";
+} from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Laptop, Handbag, CookingPot, Brush, Dumbbell } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllFilteredProducts, getProductDetails } from '@/store/shop/productSlice';
+import { getFeatureImages } from '@/store/featureSlice';
+import { addToCart, fetchCartItems } from '@/store/shop/cartSlice';
+import ProductTile from '@/components/shopping/ProductTile';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
+import ProductDetails from '@/components/shopping/ProductDetails';
 
 function Homepage() {
   const [currentSlide, setCUrrentSlide] = useState(0);
@@ -37,27 +31,27 @@ function Homepage() {
   const [open, setOpen] = useState(false);
 
   const categoriesWithIcon = [
-    { id: "electronics", label: "Electronics", icon: Laptop },
-    { id: "fashion", label: "Fashion", icon: Handbag },
-    { id: "kitchen", label: "Kitchen", icon: CookingPot },
-    { id: "beauty", label: "Beauty", icon: Brush },
-    { id: "sports", label: "Sports", icon: Dumbbell },
+    { id: 'electronics', label: 'Electronics', icon: Laptop },
+    { id: 'fashion', label: 'Fashion', icon: Handbag },
+    { id: 'kitchen', label: 'Kitchen', icon: CookingPot },
+    { id: 'beauty', label: 'Beauty', icon: Brush },
+    { id: 'sports', label: 'Sports', icon: Dumbbell },
   ];
   const brandsWithIcon = [
-    { id: "nike", label: "Nike", icon: ShirtIcon },
-    { id: "puma", label: "Puma", icon: FlagIcon },
-    { id: "h&m", label: "H&M", icon: WashingMachine },
-    { id: "zara", label: "Zara", icon: ShoppingBasket },
-    { id: "aashirvad", label: "Aashirvad", icon: LucideCookie },
+    { id: 'nike', label: 'Nike', icon: ShirtIcon },
+    { id: 'puma', label: 'Puma', icon: FlagIcon },
+    { id: 'h&m', label: 'H&M', icon: WashingMachine },
+    { id: 'zara', label: 'Zara', icon: ShoppingBasket },
+    { id: 'aashirvad', label: 'Aashirvad', icon: LucideCookie },
   ];
 
   function handleNavigateToListing(getCurrentItem, section) {
-    sessionStorage.removeItem("filters");
+    sessionStorage.removeItem('filters');
     const currentFilter = {
       [section]: [getCurrentItem.id],
     };
-    sessionStorage.setItem("filters", JSON.stringify(currentFilter));
-    navigate("/shop/list");
+    sessionStorage.setItem('filters', JSON.stringify(currentFilter));
+    navigate('/shop/list');
   }
 
   function handlegetProductDetails(getCurrentProductId) {
@@ -70,11 +64,11 @@ function Homepage() {
         userId: user?.id,
         productId: getCurrentProductId,
         quantity: 1,
-      })
+      }),
     ).then((data) => {
       if (data?.payload?.success) {
         dispatch(fetchCartItems(user?.id));
-        toast("Product is added to cart");
+        toast('Product is added to cart');
       }
     });
   }
@@ -87,9 +81,7 @@ function Homepage() {
     if (!featureImagesList || featureImagesList.length === 0) return;
 
     const timer = setInterval(() => {
-      setCUrrentSlide(
-        (prevSlide) => (prevSlide + 1) % featureImagesList.length
-      );
+      setCUrrentSlide((prevSlide) => (prevSlide + 1) % featureImagesList.length);
     }, 5000);
     return () => clearInterval(timer);
   }, [featureImagesList]);
@@ -98,11 +90,11 @@ function Homepage() {
     dispatch(
       getAllFilteredProducts({
         filterParams: {},
-        sortParams: "price-lowtohigh",
-      })
+        sortParams: 'price-lowtohigh',
+      }),
     );
     dispatch(getFeatureImages());
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -113,11 +105,11 @@ function Homepage() {
                 src={slide?.image}
                 key={index}
                 className={`${
-                  index === currentSlide ? "opacity-100" : "opacity-0"
+                  index === currentSlide ? 'opacity-100' : 'opacity-0'
                 } absolute inset-0 w-full h-full object-cover object-left transition-opacity duration-1000`}
                 alt={`banner-${index}`}
                 style={{
-                  pointerEvents: index === currentSlide ? "auto" : "none",
+                  pointerEvents: index === currentSlide ? 'auto' : 'none',
                 }}
               />
             ))
@@ -130,9 +122,7 @@ function Homepage() {
             featureImagesList &&
             featureImagesList.length > 0 &&
             setCUrrentSlide(
-              (prevSlide) =>
-                (prevSlide - 1 + featureImagesList.length) %
-                featureImagesList.length
+              (prevSlide) => (prevSlide - 1 + featureImagesList.length) % featureImagesList.length,
             )
           }
         >
@@ -145,9 +135,7 @@ function Homepage() {
           onClick={() =>
             featureImagesList &&
             featureImagesList.length > 0 &&
-            setCUrrentSlide(
-              (prevSlide) => (prevSlide + 1) % featureImagesList.length
-            )
+            setCUrrentSlide((prevSlide) => (prevSlide + 1) % featureImagesList.length)
           }
         >
           <ChevronRightIcon className="w-4 h-4" />
@@ -155,13 +143,11 @@ function Homepage() {
       </div>
       <section className="py-12 bg-gray-50">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-8">
-            Shop by category
-          </h2>
+          <h2 className="text-3xl font-bold text-center mb-8">Shop by category</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             {categoriesWithIcon.map((item) => (
               <Card
-                onClick={() => handleNavigateToListing(item, "category")}
+                onClick={() => handleNavigateToListing(item, 'category')}
                 key={item.id}
                 className="cursor-pointer hover:shadow-lg transition-shadow"
               >
@@ -180,7 +166,7 @@ function Homepage() {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             {brandsWithIcon.map((item) => (
               <Card
-                onClick={() => handleNavigateToListing(item, "brand")}
+                onClick={() => handleNavigateToListing(item, 'brand')}
                 key={item.id}
                 className="cursor-pointer hover:shadow-lg transition-shadow"
               >
@@ -195,9 +181,7 @@ function Homepage() {
       </section>
       <section className="py-12">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-8">
-            Feature Products
-          </h2>
+          <h2 className="text-3xl font-bold text-center mb-8">Feature Products</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {productList && productList.length > 0
               ? productList.map((productItem) => (
@@ -211,11 +195,7 @@ function Homepage() {
           </div>
         </div>
       </section>
-      <ProductDetails
-        open={open}
-        setOpen={setOpen}
-        productDetails={productDetails}
-      />
+      <ProductDetails open={open} setOpen={setOpen} productDetails={productDetails} />
     </div>
   );
 }

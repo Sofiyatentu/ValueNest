@@ -1,10 +1,10 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const FeatureSchema = new mongoose.Schema(
   {
     image: String,
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-module.exports = mongoose.model("Feature", FeatureSchema);
+module.exports = mongoose.model('Feature', FeatureSchema);

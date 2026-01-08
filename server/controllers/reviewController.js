@@ -1,27 +1,26 @@
-const Order = require("../models/Order");
-const Product = require("../models/Product");
-const Review = require("../models/Review");
+const Order = require('../models/Order');
+const Product = require('../models/Product');
+const Review = require('../models/Review');
 
 const addProductReview = async (req, res) => {
   try {
-    const { productId, userId, userName, reviewMessage, reviewValue } =
-      req.body;
+    const { productId, userId, userName, reviewMessage, reviewValue } = req.body;
     const order = await Order.findOne({
       userId,
-      "cartItems.productId": productId,
-      orderStatus: "confirmed",
+      'cartItems.productId': productId,
+      orderStatus: 'confirmed',
     });
     if (!order) {
       res.status(403).json({
         success: false,
-        message: "You need to purchase in order to review it",
+        message: 'You need to purchase in order to review it',
       });
     }
     const existingReview = await Review.findOne({ productId, userId });
     if (existingReview) {
       return res.status(400).json({
         success: false,
-        message: "You already reviewd this product",
+        message: 'You already reviewd this product',
       });
     }
     const newReview = new Review({
@@ -35,8 +34,7 @@ const addProductReview = async (req, res) => {
     const reviews = await Review.find({ productId });
     const totalReviewsLength = reviews.length;
     const averageReview =
-      reviews.reduce((sum, item) => sum + item.reviewValue, 0) /
-      totalReviewsLength;
+      reviews.reduce((sum, item) => sum + item.reviewValue, 0) / totalReviewsLength;
     await Product.findByIdAndUpdate(productId, { averageReview });
     res.status(201).json({
       success: true,
@@ -46,7 +44,7 @@ const addProductReview = async (req, res) => {
     console.log(error);
     res.status(500).json({
       success: false,
-      message: "Error occured",
+      message: 'Error occured',
     });
   }
 };
@@ -63,7 +61,7 @@ const getProductReviews = async (req, res) => {
     console.log(error);
     res.status(500).json({
       success: false,
-      message: "Error occured",
+      message: 'Error occured',
     });
   }
 };

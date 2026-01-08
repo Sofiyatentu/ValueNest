@@ -1,36 +1,32 @@
-import { HousePlug, LogOut, Menu, ShoppingCart, UserCog } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
-import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
-import { Button } from "../ui/button";
-import { useDispatch, useSelector } from "react-redux";
-import { shoppingMenuItems } from "@/config";
+import { HousePlug, LogOut, Menu, ShoppingCart, UserCog } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet';
+import { Button } from '../ui/button';
+import { useDispatch, useSelector } from 'react-redux';
+import { shoppingMenuItems } from '@/config';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from "@radix-ui/react-dropdown-menu";
-import { Avatar, AvatarFallback } from "@radix-ui/react-avatar";
-import {
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-} from "../ui/dropdown-menu";
-import { logoutUser, resetTokenAndCredentials } from "@/store/authSlice";
-import UserCartWrapper from "./cartWrapper";
-import { useEffect, useState } from "react";
-import { fetchCartItems } from "@/store/shop/cartSlice";
-import { Label } from "../ui/label";
+} from '@radix-ui/react-dropdown-menu';
+import { Avatar, AvatarFallback } from '@radix-ui/react-avatar';
+import { DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from '../ui/dropdown-menu';
+import { resetTokenAndCredentials } from '@/store/authSlice';
+import UserCartWrapper from './cartWrapper';
+import { useEffect, useState } from 'react';
+import { fetchCartItems } from '@/store/shop/cartSlice';
+import { Label } from '../ui/label';
 
 function MenuItems() {
   const navigate = useNavigate();
   function handleNavigate(getCUrrentItem) {
-    sessionStorage.removeItem("filters");
+    sessionStorage.removeItem('filters');
     const currentFilter =
-      getCUrrentItem.id !== "home" && getCUrrentItem.id !== "products"
+      getCUrrentItem.id !== 'home' && getCUrrentItem.id !== 'products'
         ? { category: [getCUrrentItem.id] }
         : null;
-    sessionStorage.setItem("filters", JSON.stringify(currentFilter));
-    navigate(getCUrrentItem.path || "/shop/list", {
+    sessionStorage.setItem('filters', JSON.stringify(currentFilter));
+    navigate(getCUrrentItem.path || '/shop/list', {
       state: { filtersUpdated: Date.now() },
     });
   }
@@ -61,12 +57,12 @@ function HeaderRightContent() {
     // dispatch(logoutUser());
     dispatch(resetTokenAndCredentials());
     sessionStorage.clear();
-    navigate("/auth/login");
+    navigate('/auth/login');
   }
 
   useEffect(() => {
     dispatch(fetchCartItems(user?.id));
-  }, [dispatch]);
+  }, [dispatch, user?.id]);
   return (
     <div className="flex lg:items-center lg:flex-row flex-col gap-4">
       <Sheet open={openCartSheet} onOpenChange={() => setOpenCartSheet(false)}>
@@ -83,9 +79,7 @@ function HeaderRightContent() {
         <UserCartWrapper
           setOpenCartSheet={setOpenCartSheet}
           cartItems={
-            cartItems && cartItems.items && cartItems.items.length > 0
-              ? cartItems.items
-              : ""
+            cartItems && cartItems.items && cartItems.items.length > 0 ? cartItems.items : ''
           }
         />
       </Sheet>
@@ -101,7 +95,7 @@ function HeaderRightContent() {
         <DropdownMenuContent side="right" className="w-56">
           <DropdownMenuLabel>Logged in as {user.userName}</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => navigate("/shop/account")}>
+          <DropdownMenuItem onClick={() => navigate('/shop/account')}>
             <UserCog className="mr-2 h-4 w-4" />
             Account
           </DropdownMenuItem>
@@ -116,7 +110,7 @@ function HeaderRightContent() {
 }
 
 function ShoppingHeader() {
-  const { isAuthenticated } = useSelector((state) => state.auth);
+  // const { isAuthenticated } = useSelector((state) => state.auth);
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background">

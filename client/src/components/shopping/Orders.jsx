@@ -1,23 +1,12 @@
-import { Button } from "../ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { Dialog } from "../ui/dialog";
-import { useEffect, useState } from "react";
-import {
-  Table,
-  TableBody,
-  TableHead,
-  TableHeader,
-  TableRow,
-  TableCell,
-} from "../ui/table";
-import ShoppingOrderDetailsView from "./OrderDetails";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  getAllOrders,
-  getOrderDetails,
-  resetOrderDetails,
-} from "@/store/shop/orderSlice";
-import { Badge } from "../ui/badge";
+import { Button } from '../ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Dialog } from '../ui/dialog';
+import { useEffect, useState } from 'react';
+import { Table, TableBody, TableHead, TableHeader, TableRow, TableCell } from '../ui/table';
+import ShoppingOrderDetailsView from './OrderDetails';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllOrders, getOrderDetails, resetOrderDetails } from '@/store/shop/orderSlice';
+import { Badge } from '../ui/badge';
 
 function ShoppingOrders() {
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
@@ -34,9 +23,9 @@ function ShoppingOrders() {
   }, [orderDetails]);
   useEffect(() => {
     dispatch(getAllOrders(user?.id));
-  }, [dispatch]);
+  }, [dispatch, user?.id]);
 
-  console.log(orderDetails, "orderDetails");
+  console.log(orderDetails, 'orderDetails');
   return (
     <Card>
       <CardHeader>
@@ -60,15 +49,15 @@ function ShoppingOrders() {
               ? orderList.map((item) => (
                   <TableRow>
                     <TableCell>{item?._id.slice(-8)}</TableCell>
-                    <TableCell>{item?.orderDate.split("T")[0]}</TableCell>
+                    <TableCell>{item?.orderDate.split('T')[0]}</TableCell>
                     <TableCell>
                       <Badge
                         className={`py-1 px-3 ${
-                          item?.orderStatus === "confirmed"
-                            ? "bg-green-500"
-                            : item?.orderStatus === "rejected"
-                            ? "bg-red-600"
-                            : "bg-black"
+                          item?.orderStatus === 'confirmed'
+                            ? 'bg-green-500'
+                            : item?.orderStatus === 'rejected'
+                              ? 'bg-red-600'
+                              : 'bg-black'
                         }`}
                       >
                         {item?.orderStatus}
@@ -83,9 +72,7 @@ function ShoppingOrders() {
                           dispatch(resetOrderDetails());
                         }}
                       >
-                        <Button
-                          onClick={() => handleFetchOrderDetails(item?._id)}
-                        >
+                        <Button onClick={() => handleFetchOrderDetails(item?._id)}>
                           View Details
                         </Button>
                         <ShoppingOrderDetailsView orderDetails={orderDetails} />
