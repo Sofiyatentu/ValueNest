@@ -1,23 +1,24 @@
-import 'dotenv/config';
+require('dotenv').config();
 
-import express from 'express';
-import mongoose from 'mongoose';
-import cookieParser from 'cookie-parser';
-import cors from 'cors';
-
-import registerRouter from './routes/authRoutes.js';
-import adminProductRoutes from './routes/admin/productRoutes.js';
-import shopProductRoutes from './routes/shop/productRoutes.js';
-import cartRoutes from './routes/shop/cartRoutes.js';
-import addressRoutes from './routes/shop/addessRoutes.js';
-import orderRoutes from './routes/shop/orderRoutes.js';
-import adminOrderRoutes from './routes/admin/orderRoutes.js';
-import searchRoutes from './routes/shop/searchRoutes.js';
-import reviewRoutes from './routes/shop/reviewRoutes.js';
-import featureRoutes from './routes/common/featureRoutes.js';
+const express = require('express');
+const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
+const cors = require('cors');
+const registerRouter = require('./routes/authRoutes');
+const adminProductRoutes = require('./routes/admin/productRoutes');
+const shopProductRoutes = require('./routes/shop/productRoutes');
+const cartRoutes = require('./routes/shop/cartRoutes');
+const addressRoutes = require('./routes/shop/addessRoutes');
+const orderRoutes = require('./routes/shop/orderRoutes');
+const adminOrderRoutes = require('./routes/admin/orderRoutes');
+const searchRoutes = require('./routes/shop/searchRoutes');
+const reviewRoutes = require('./routes/shop/reviewRoutes');
+const featureRoutes = require('./routes/common/featureRoutes');
 
 mongoose
   .connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
     serverSelectionTimeoutMS: 10000,
   })
   .then(() => console.log('mongodb connected'))
@@ -34,12 +35,11 @@ app.use(
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control', 'Expires', 'Pragma'],
     credentials: true,
-  })
+  }),
 );
 
 app.use(cookieParser());
 app.use(express.json());
-
 app.use('/api/auth', registerRouter);
 app.use('/api/admin/products', adminProductRoutes);
 app.use('/api/shop/products', shopProductRoutes);
