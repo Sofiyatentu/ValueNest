@@ -1,5 +1,5 @@
 require("dotenv").config();
-
+console.log("ENV MONGO_URL:", process.env.MONGO_URL);
 const express = require("express");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
@@ -41,7 +41,7 @@ app.use(
       "Pragma",
     ],
     credentials: true,
-  })
+  }),
 );
 
 app.use(cookieParser());
