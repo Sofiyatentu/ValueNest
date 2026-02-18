@@ -1,18 +1,23 @@
-import { addressFormControls } from '@/config';
-import CommonForm from '../common/form';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { addAddress, deleteAddress, editAddress, fetchAllAddress } from '@/store/shop/addressSlice';
-import AddressCard from './AddressCard';
-import { toast } from 'sonner';
+import { addressFormControls } from "@/config";
+import CommonForm from "../common/form";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addAddress,
+  deleteAddress,
+  editAddress,
+  fetchAllAddress,
+} from "@/store/shop/addressSlice";
+import AddressCard from "./AddressCard";
+import { toast } from "sonner";
 
 const initialFormData = {
-  address: '',
-  city: '',
-  pincode: '',
-  phone: '',
-  notes: '',
+  address: "",
+  city: "",
+  pincode: "",
+  phone: "",
+  notes: "",
 };
 
 function Address({ setCurrentSelectedAddress, selectedId }) {
@@ -26,7 +31,7 @@ function Address({ setCurrentSelectedAddress, selectedId }) {
     e.preventDefault();
     if (addressList.length >= 3 && currentEditedId === null) {
       setFormData(initialFormData);
-      toast('You can add max 3 addresses');
+      toast("You can add max 3 addresses");
       return;
     }
     currentEditedId !== null
@@ -35,13 +40,13 @@ function Address({ setCurrentSelectedAddress, selectedId }) {
             userId: user?.id,
             addressId: currentEditedId,
             formData,
-          }),
+          })
         ).then((data) => {
           if (data?.payload?.success) {
             dispatch(fetchAllAddress(user?.id));
             setCurrentEditedId(null);
             setFormData(initialFormData);
-            toast('Address edited successfully');
+            toast("Address edited successfully");
           }
         })
       : dispatch(addAddress({ ...formData, userId: user?.id })).then((data) => {
@@ -49,17 +54,19 @@ function Address({ setCurrentSelectedAddress, selectedId }) {
           if (data?.payload?.success) {
             dispatch(fetchAllAddress(user?.id));
             setFormData(initialFormData);
-            toast('Address added successfully');
+            toast("Address added successfully");
           }
         });
   }
 
   function handleDelete(addressInfo) {
-    dispatch(deleteAddress({ userId: user?.id, addressId: addressInfo._id })).then((data) => {
+    dispatch(
+      deleteAddress({ userId: user?.id, addressId: addressInfo._id })
+    ).then((data) => {
       console.log(data);
       if (data?.payload?.success) {
         dispatch(fetchAllAddress(user?.id));
-        toast('Address deleted successfully');
+        toast("Address deleted successfully");
       }
     });
   }
@@ -78,13 +85,13 @@ function Address({ setCurrentSelectedAddress, selectedId }) {
 
   function isFormValid() {
     return Object.keys(formData)
-      .map((key) => formData[key].trim() !== '')
+      .map((key) => formData[key].trim() !== "")
       .every((item) => item);
   }
 
   useEffect(() => {
     dispatch(fetchAllAddress(user?.id));
-  }, [dispatch, user?.id]);
+  }, [dispatch]);
 
   console.log(addressList);
   return (
@@ -103,14 +110,16 @@ function Address({ setCurrentSelectedAddress, selectedId }) {
           : null}
       </div>
       <CardHeader>
-        <CardTitle>{currentEditedId !== null ? 'Edit Address' : 'Add New Address'}</CardTitle>
+        <CardTitle>
+          {currentEditedId !== null ? "Edit Address" : "Add New Address"}
+        </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
         <CommonForm
           formControls={addressFormControls}
           formData={formData}
           setFormData={setFormData}
-          buttonText={currentEditedId !== null ? 'Edit' : 'Add'}
+          buttonText={currentEditedId !== null ? "Edit" : "Add"}
           onSubmit={handleAddress}
           isbtnDisabled={!isFormValid()}
         />

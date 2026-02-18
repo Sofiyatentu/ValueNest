@@ -1,19 +1,19 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { Button } from '../ui/button';
-import { Dialog, DialogContent } from '../ui/dialog';
-import { addToCart, fetchCartItems } from '@/store/shop/cartSlice';
-import { clearProductDetails } from '@/store/shop/productSlice';
-import { toast } from 'sonner';
-import { Avatar, AvatarFallback } from '../ui/avatar';
-import { StarIcon } from 'lucide-react';
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
-import StarRatingComponent from '../common/starRating';
-import { useEffect, useState } from 'react';
-import { addProductReview, getProductReviews } from '@/store/shop/reviewSlice';
+import { useDispatch, useSelector } from "react-redux";
+import { Button } from "../ui/button";
+import { Dialog, DialogContent } from "../ui/dialog";
+import { addToCart, fetchCartItems } from "@/store/shop/cartSlice";
+import { clearProductDetails } from "@/store/shop/productSlice";
+import { toast } from "sonner";
+import { Avatar, AvatarFallback } from "../ui/avatar";
+import { StarIcon } from "lucide-react";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import StarRatingComponent from "../common/starRating";
+import { useEffect, useState } from "react";
+import { addProductReview, getProductReviews } from "@/store/shop/reviewSlice";
 
 function ProductDetails({ open, setOpen, productDetails }) {
-  const [reviewMsg, setReviewMsg] = useState('');
+  const [reviewMsg, setReviewMsg] = useState("");
   const [rating, setrating] = useState(0);
   const { cartItems } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
@@ -22,7 +22,8 @@ function ProductDetails({ open, setOpen, productDetails }) {
 
   const totalReviewsLength = reviews.length;
   const averageReview =
-    reviews.reduce((sum, item) => sum + item.reviewValue, 0) / totalReviewsLength;
+    reviews.reduce((sum, item) => sum + item.reviewValue, 0) /
+    totalReviewsLength;
 
   function handleAddReview() {
     dispatch(
@@ -32,11 +33,11 @@ function ProductDetails({ open, setOpen, productDetails }) {
         userName: user?.userName,
         reviewMessage: reviewMsg,
         reviewValue: rating,
-      }),
+      })
     ).then((data) => {
       if (data?.paylod?.success) {
         dispatch(getProductReviews(productDetails?._id));
-        toast('Review added successfully');
+        toast("Review added successfully");
       }
     });
   }
@@ -49,7 +50,7 @@ function ProductDetails({ open, setOpen, productDetails }) {
     let getCartItems = cartItems.items || [];
     if (getCartItems.length) {
       const indexOfCurrentItem = getCartItems.findIndex(
-        (item) => item.productId === getCurrentProductId,
+        (item) => item.productId === getCurrentProductId
       );
       if (indexOfCurrentItem > -1) {
         const getQuantity = getCartItems[indexOfCurrentItem].quantity;
@@ -64,20 +65,20 @@ function ProductDetails({ open, setOpen, productDetails }) {
         userId: user?.id,
         productId: getCurrentProductId,
         quantity: 1,
-      }),
+      })
     ).then((data) => {
       if (data?.payload?.success) {
         setrating(0);
-        setReviewMsg('');
+        setReviewMsg("");
         dispatch(fetchCartItems(user?.id));
-        toast('Product is added to cart');
+        toast("Product is added to cart");
       }
     });
   }
 
   function handleDialogClose() {
-    (setOpen(false), dispatch(clearProductDetails()));
-    setReviewMsg('');
+    setOpen(false), dispatch(clearProductDetails());
+    setReviewMsg("");
     setrating(0);
   }
 
@@ -85,9 +86,9 @@ function ProductDetails({ open, setOpen, productDetails }) {
     if (productDetails !== null) {
       dispatch(getProductReviews(productDetails?._id));
     }
-  }, [productDetails, dispatch]);
+  }, [productDetails]);
 
-  console.log(reviews, 'reviews');
+  console.log(reviews, "reviews");
 
   return (
     <Dialog open={open} onOpenChange={handleDialogClose}>
@@ -103,11 +104,13 @@ function ProductDetails({ open, setOpen, productDetails }) {
         </div>
         <div className="">
           <h1 className="text-3xl font-extrabold">{productDetails?.title}</h1>
-          <p className="text-muted-foreground text-2xl mb-5 mt-4">{productDetails?.description}</p>
+          <p className="text-muted-foreground text-2xl mb-5 mt-4">
+            {productDetails?.description}
+          </p>
           <div className="flex items-center justify-between">
             <p
               className={`text-3xl font-bold text-primary ${
-                productDetails?.salePrice > 0 ? 'line-through' : ''
+                productDetails?.salePrice > 0 ? "line-through" : ""
               }`}
             >
               ${productDetails?.price}
@@ -126,10 +129,14 @@ function ProductDetails({ open, setOpen, productDetails }) {
           </div>
           <div className="mt-5 mb-3">
             {productDetails?.stock === 0 ? (
-              <Button className="w-full opacity-60 cursor-not-allowed">Out of Stock</Button>
+              <Button className="w-full opacity-60 cursor-not-allowed">
+                Out of Stock
+              </Button>
             ) : (
               <Button
-                onClick={() => handleAddtoCart(productDetails?._id, productDetails?.stock)}
+                onClick={() =>
+                  handleAddtoCart(productDetails?._id, productDetails?.stock)
+                }
                 className="w-full"
               >
                 Add to Cart
@@ -143,7 +150,9 @@ function ProductDetails({ open, setOpen, productDetails }) {
                 reviews.map((item) => (
                   <div className="flex gap-4">
                     <Avatar className="w-10 h-10 border">
-                      <AvatarFallback>{item?.userName[0].toUpperCase()}</AvatarFallback>
+                      <AvatarFallback>
+                        {item?.userName[0].toUpperCase()}
+                      </AvatarFallback>
                     </Avatar>
                     <div className="grid gap-1">
                       <div className="flex items-center gap-2">
@@ -152,7 +161,9 @@ function ProductDetails({ open, setOpen, productDetails }) {
                       <div className="flex items-center gap-0.5">
                         <StarRatingComponent rating={item?.reviewValue} />
                       </div>
-                      <p className="text-muted-foreground">{item?.reviewMessage}</p>
+                      <p className="text-muted-foreground">
+                        {item?.reviewMessage}
+                      </p>
                     </div>
                   </div>
                 ))
@@ -163,7 +174,10 @@ function ProductDetails({ open, setOpen, productDetails }) {
             <div className="mt-10 flex flex-col gap-2">
               <Label>Write a review</Label>
               <div className="flex">
-                <StarRatingComponent rating={rating} handleratingChange={handleratingChange} />
+                <StarRatingComponent
+                  rating={rating}
+                  handleratingChange={handleratingChange}
+                />
               </div>
               <Input
                 name="reviewMsg"
@@ -171,7 +185,10 @@ function ProductDetails({ open, setOpen, productDetails }) {
                 onChange={(e) => setReviewMsg(e.target.value)}
                 placeholder="Write a review..."
               />
-              <Button onClick={handleAddReview} disabled={reviewMsg.trim() === ''}>
+              <Button
+                onClick={handleAddReview}
+                disabled={reviewMsg.trim() === ""}
+              >
                 Submit
               </Button>
             </div>

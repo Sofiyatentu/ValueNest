@@ -1,5 +1,5 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 const initialState = {
   isLoading: false,
   productList: [],
@@ -7,26 +7,31 @@ const initialState = {
 };
 
 export const getAllFilteredProducts = createAsyncThunk(
-  '/products/get',
+  "/products/get",
   async ({ filterParams, sortParams }) => {
     const query = new URLSearchParams({
       ...filterParams,
       sortBy: sortParams,
     });
     const result = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/shop/products/get?${query}`,
+      `${import.meta.env.VITE_API_URL}/api/shop/products/get?${query}`
     );
     return result.data;
-  },
+  }
 );
 
-export const getProductDetails = createAsyncThunk('/products/get/id', async (id) => {
-  const result = await axios.get(`${import.meta.env.VITE_API_URL}/api/shop/products/get/${id}`);
-  return result.data;
-});
+export const getProductDetails = createAsyncThunk(
+  "/products/get/id",
+  async (id) => {
+    const result = await axios.get(
+      `${import.meta.env.VITE_API_URL}/api/shop/products/get/${id}`
+    );
+    return result.data;
+  }
+);
 
 const ShoppingProductSlice = createSlice({
-  name: 'shoppingProducts',
+  name: "shoppingProducts",
   initialState,
   reducers: {
     clearProductDetails(state) {
@@ -35,24 +40,24 @@ const ShoppingProductSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getAllFilteredProducts.pending, (state) => {
+      .addCase(getAllFilteredProducts.pending, (state, action) => {
         state.isLoading = true;
       })
       .addCase(getAllFilteredProducts.fulfilled, (state, action) => {
         console.log(action.payload);
-        ((state.isLoading = false), (state.productList = action.payload.data));
+        (state.isLoading = false), (state.productList = action.payload.data);
       })
       .addCase(getAllFilteredProducts.rejected, (state) => {
-        ((state.isLoading = false), (state.productList = []));
+        (state.isLoading = false), (state.productList = []);
       })
-      .addCase(getProductDetails.pending, (state) => {
+      .addCase(getProductDetails.pending, (state, action) => {
         state.isLoading = true;
       })
       .addCase(getProductDetails.fulfilled, (state, action) => {
-        ((state.isLoading = false), (state.productDetails = action.payload.data));
+        (state.isLoading = false), (state.productDetails = action.payload.data);
       })
       .addCase(getProductDetails.rejected, (state) => {
-        ((state.isLoading = false), (state.productDetails = null));
+        (state.isLoading = false), (state.productDetails = null);
       });
   },
 });

@@ -5,10 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "server.js",
-    "dev": "nodemon server.js",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
-    "format": "prettier --write ."
+    "dev": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
@@ -26,9 +23,5 @@
     "mongoose": "^8.19.3",
     "multer": "^2.0.2",
     "paypal-rest-sdk": "^1.8.1"
-  },
-  "devDependencies": {
-    "eslint": "^9.39.2",
-    "prettier": "^3.7.4"
   }
 }

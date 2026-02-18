@@ -1,16 +1,19 @@
-import ProductTile from '@/components/shopping/ProductTile';
-import { Input } from '@/components/ui/input';
-import { getSearchProducts, resetSearchResults } from '@/store/shop/searchSlice';
-import { addToCart, fetchCartItems } from '@/store/shop/cartSlice';
-import { getProductDetails } from '@/store/shop/productSlice';
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useSearchParams } from 'react-router-dom';
-import { toast } from 'sonner';
-import ProductDetails from '@/components/shopping/ProductDetails';
+import ProductTile from "@/components/shopping/ProductTile";
+import { Input } from "@/components/ui/input";
+import {
+  getSearchProducts,
+  resetSearchResults,
+} from "@/store/shop/searchSlice";
+import { addToCart, fetchCartItems } from "@/store/shop/cartSlice";
+import { getProductDetails } from "@/store/shop/productSlice";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useSearchParams } from "react-router-dom";
+import { toast } from "sonner";
+import ProductDetails from "@/components/shopping/ProductDetails";
 
 function SearchPage() {
-  const [keyword, setKeyword] = useState('');
+  const [keyword, setKeyword] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
   const dispatch = useDispatch();
   const { searchResults } = useSelector((state) => state.search);
@@ -20,7 +23,7 @@ function SearchPage() {
   const [open, setOpen] = useState(false);
 
   function handlegetProductDetails(getCurrentProductId) {
-    console.log(getCurrentProductId, 'currentpoduct');
+    console.log(getCurrentProductId, "currentpoduct");
     dispatch(getProductDetails(getCurrentProductId));
   }
 
@@ -28,7 +31,7 @@ function SearchPage() {
     let getCartItems = cartItems.items || [];
     if (getCartItems.length) {
       const indexOfCurrentItem = getCartItems.findIndex(
-        (item) => item.productId === getCurrentProductId,
+        (item) => item.productId === getCurrentProductId
       );
       if (indexOfCurrentItem > -1) {
         const getQuantity = getCartItems[indexOfCurrentItem].quantity;
@@ -43,33 +46,32 @@ function SearchPage() {
         userId: user?.id,
         productId: getCurrentProductId,
         quantity: 1,
-      }),
+      })
     ).then((data) => {
       if (data?.payload?.success) {
         dispatch(fetchCartItems(user?.id));
-        toast('Product is added to cart');
+        toast("Product is added to cart");
       }
     });
   }
 
   useEffect(() => {
-    if (keyword && keyword.trim() !== '' && keyword.trim().length > 3) {
+    if (keyword && keyword.trim() !== "" && keyword.trim().length > 3) {
       setTimeout(() => {
         setSearchParams(new URLSearchParams(`?keyword=${keyword}`));
         dispatch(getSearchProducts(keyword));
-        console.log(searchParams);
       }, 1000);
     } else {
       setSearchParams(new URLSearchParams(`?keyword=${keyword}`));
       dispatch(resetSearchResults());
     }
-  }, [keyword, dispatch, searchParams, setSearchParams]);
+  }, [keyword]);
 
   useEffect(() => {
     if (productDetails !== null) setOpen(true);
   }, [productDetails]);
 
-  console.log(searchResults, 'searchResulst');
+  console.log(searchResults, "searchResulst");
   return (
     <div className="container mx-auto md:px-6 px-4 py-8">
       <div className="flex justify-center mb-8">
@@ -96,7 +98,11 @@ function SearchPage() {
           <h1 className="text-5xl font-extrabold">No result found</h1>
         )}
       </div>
-      <ProductDetails open={open} setOpen={setOpen} productDetails={productDetails} />
+      <ProductDetails
+        open={open}
+        setOpen={setOpen}
+        productDetails={productDetails}
+      />
     </div>
   );
 }

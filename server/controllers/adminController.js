@@ -1,19 +1,21 @@
-const { imageUploadUtil } = require('../helpers/cloudinary');
-const Product = require('../models/Product');
+const { imageUploadUtil } = require("../helpers/cloudinary");
+const Product = require("../models/Product");
 
 const handleImageUpload = async (req, res) => {
   try {
     if (req.user && req.user.isDemo) {
-      return res.status(403).json({ success: false, message: 'Demo admin: no write access' });
+      return res
+        .status(403)
+        .json({ success: false, message: "Demo admin: no write access" });
     }
     if (!req.file) {
       return res.json({
         success: false,
-        message: 'No file received',
+        message: "No file received",
       });
     }
 
-    const b64 = Buffer.from(req.file.buffer).toString('base64');
+    const b64 = Buffer.from(req.file.buffer).toString("base64");
     const url = `data:${req.file.mimetype};base64,${b64}`;
 
     const result = await imageUploadUtil(url);
@@ -26,7 +28,7 @@ const handleImageUpload = async (req, res) => {
     console.error(error);
     res.json({
       success: false,
-      message: 'Error occured',
+      message: "Error occured",
     });
   }
 };
@@ -34,9 +36,20 @@ const handleImageUpload = async (req, res) => {
 const addProduct = async (req, res) => {
   try {
     if (req.user && req.user.isDemo) {
-      return res.status(403).json({ success: false, message: 'Demo admin: no write access' });
+      return res
+        .status(403)
+        .json({ success: false, message: "Demo admin: no write access" });
     }
-    const { image, title, category, brand, price, salePrice, stock, description } = req.body;
+    const {
+      image,
+      title,
+      category,
+      brand,
+      price,
+      salePrice,
+      stock,
+      description,
+    } = req.body;
     const newProduct = new Product({
       image,
       title,
@@ -56,7 +69,7 @@ const addProduct = async (req, res) => {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: 'Error occured',
+      message: "Error occured",
     });
   }
 };
@@ -68,11 +81,11 @@ const fetchAllProducts = async (req, res) => {
       success: true,
       data: listOfProducts,
     });
-  } catch (error) {
+  } catch (e) {
     console.log(error);
     res.status(500).json({
       success: false,
-      message: 'Error occured',
+      message: "Error occured",
     });
   }
 };
@@ -80,12 +93,26 @@ const fetchAllProducts = async (req, res) => {
 const editProduct = async (req, res) => {
   try {
     if (req.user && req.user.isDemo) {
-      return res.status(403).json({ success: false, message: 'Demo admin: no write access' });
+      return res
+        .status(403)
+        .json({ success: false, message: "Demo admin: no write access" });
     }
     const { id } = req.params;
-    const { image, title, category, brand, price, salePrice, stock, description } = req.body;
+    const {
+      image,
+      title,
+      category,
+      brand,
+      price,
+      salePrice,
+      stock,
+      description,
+    } = req.body;
     const product = await Product.findById(id);
-    if (!product) return res.status(404).json({ success: false, message: 'Product not found' });
+    if (!product)
+      return res
+        .status(404)
+        .json({ success: false, message: "Product not found" });
     product.title = title || product.title;
     product.description = description || product.description;
     product.brand = brand || product.brand;
@@ -104,7 +131,7 @@ const editProduct = async (req, res) => {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: 'Error occured',
+      message: "Error occured",
     });
   }
 };
@@ -112,20 +139,25 @@ const editProduct = async (req, res) => {
 const deleteProduct = async (req, res) => {
   try {
     if (req.user && req.user.isDemo) {
-      return res.status(403).json({ success: false, message: 'Demo admin: no write access' });
+      return res
+        .status(403)
+        .json({ success: false, message: "Demo admin: no write access" });
     }
     const { id } = req.params;
     const product = await Product.findByIdAndDelete(id);
-    if (!product) return res.status(404).json({ success: false, message: 'Product not found' });
+    if (!product)
+      return res
+        .status(404)
+        .json({ success: false, message: "Product not found" });
     res.status(200).json({
       success: true,
-      message: 'Product is deleted successfully',
+      message: "Product is deleted successfully",
     });
   } catch (e) {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: 'Error occured',
+      message: "Error occured",
     });
   }
 };

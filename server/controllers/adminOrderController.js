@@ -1,4 +1,4 @@
-const Order = require('../models/Order');
+const Order = require("../models/Order");
 
 const getAllOrdersAllUser = async (req, res) => {
   try {
@@ -6,7 +6,7 @@ const getAllOrdersAllUser = async (req, res) => {
     if (!orders.length) {
       return res.status(404).json({
         success: false,
-        message: 'No orders found',
+        message: "No orders found",
       });
     }
     return res.status(200).json({
@@ -17,7 +17,7 @@ const getAllOrdersAllUser = async (req, res) => {
     console.log(error);
     res.status(500).json({
       success: false,
-      message: 'Error occured',
+      message: "Error occured",
     });
   }
 };
@@ -29,7 +29,7 @@ const getOrderDetailsForAdmin = async (req, res) => {
     if (!order) {
       return res.status(404).json({
         success: false,
-        message: 'Order not found',
+        message: "Order not found",
       });
     }
     return res.status(200).json({
@@ -40,7 +40,7 @@ const getOrderDetailsForAdmin = async (req, res) => {
     console.log(error);
     res.status(500).json({
       success: false,
-      message: 'Error occured',
+      message: "Error occured",
     });
   }
 };
@@ -48,7 +48,9 @@ const getOrderDetailsForAdmin = async (req, res) => {
 const updateOrderStatus = async (req, res) => {
   try {
     if (req.user && req.user.isDemo) {
-      return res.status(403).json({ success: false, message: 'Demo admin: no write access' });
+      return res
+        .status(403)
+        .json({ success: false, message: "Demo admin: no write access" });
     }
     const { id } = req.params;
     const { orderStatus } = req.body;
@@ -56,19 +58,19 @@ const updateOrderStatus = async (req, res) => {
     if (!order) {
       return res.status(404).json({
         success: false,
-        message: 'Order not found',
+        message: "Order not found",
       });
     }
     await Order.findByIdAndUpdate(id, { orderStatus });
     return res.status(200).json({
       success: true,
-      message: 'Order status updated successfully',
+      message: "Order status updated successfully",
     });
   } catch (e) {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: 'Error occured',
+      message: "Error occured",
     });
   }
 };
